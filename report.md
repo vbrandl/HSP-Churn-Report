@@ -1,4 +1,4 @@
-# Meassuring Churn in P2P Botnets
+# Measuring Churn in P2P Botnets
 
 ## Problem: Churn
 
@@ -54,6 +54,12 @@ WHERE br.time_seen >= %(start)s
 
 Other minor problems included misunderstanding of the used programming language, e.g. Python default parameters are evaluated once and not on each function call:
 Given a function `def foo(when = datetime.now())`, the default value for `when` is calculated once when first calling the function and each subsequent call invocation `foo` will get the earlier value of `when`.
+
+
+#### Unfinished Sessions
+
+If the scheduler is stopped and started again later, it could happen, that earlier active sessions are not closed properly or merged with the current session, if a peer is still active.
+Therefore, when starting the task, it must first load all still open sessions from the database, and perform analysis the churn on those to decide if the session has ended in the meantime or if it is still active and has to be merged with the currently active session.
 
 ## References
 
