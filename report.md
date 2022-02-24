@@ -60,7 +60,8 @@ Given a function `def foo(when = datetime.now())`, the default value for `when` 
 
 #### Unfinished Sessions
 
-If the scheduler is stopped and started again later, it could happen, that earlier active sessions are not closed properly or merged with the current session, if a peer is still active.
+Since currently active sessions can be considered working state of the application, problems could occur, if the scheduler is stopped and started again later.
+It could happen, that earlier active sessions are not closed properly or merged with the current session, if a peer is still active.
 Therefore, when starting the task, it must first load all still open sessions from the database, and perform analysis the churn on those to decide if the session has ended in the meantime or if it is still active and has to be merged with the currently active session.
 
 ## References
