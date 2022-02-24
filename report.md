@@ -59,9 +59,9 @@ WHERE br.time_seen >= %(start)s
 ```
 
 Other minor problems included misunderstanding of the used programming language, e.g. Python default parameters are evaluated once and not on each function call:
-Given a function `def foo(when = datetime.now())`, the default value for `when` is calculated once when first calling the function and each subsequent call invocation `foo` will get the earlier value of `when`. 
+Given a function `def foo(when = datetime.now())`, the default value for `when` is calculated once when first calling the function and each subsequent call invocation `foo` will get the earlier value of `when`.
 
-Also assuming that a List of tuples with start and end times for sessions was already sorted lead to a minor hiccup. This lead to wrong parameters being given for calculation and resulted in sessions with a negativ duration.
+Also assuming that a List of tuples with start and end times for sessions was already sorted lead to a minor hiccup. This lead to wrong parameters being given for calculation and resulted in sessions with a negativ duration and many small sessions since consecutive time buckets would not be merged into the same session.
 
 
 #### Unfinished Sessions
