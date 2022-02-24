@@ -24,6 +24,8 @@ A session is defined as a consecutive series of 5 minute time buckets in which a
 We recorded sessions both based on IP address + port and the unique bot ID, the peer uses inside the network.
 Major differences in those sessions would be an indicator for either more than one peer using the same IP (e.g. devices behind a NAT) or really long running nodes using a residential internet connection that rotates IP addresses periodically.
 
+For IP based sessions, the name of the autonomous system (AS) was recorded as well so it is possible to correlate geographic location to specific churn behaviour, which showed impacts of the Chinese Great Firewall, where peers using Chinese IP addresses would have problems connecting at certain times of the day, which results in many small sessions instead of one long session.
+
 ### Problems
 
 Most problems we encountered, were performance problems. The solution was correct on small test datasets but did not perform well or at all on realworld data.
@@ -44,6 +46,9 @@ SELECT time_bucket(%(bucket_size)s, time_seen), bot_id, ip, port, botnet_id
 FROM bot_edges
 WHERE br.time_seen >= %(start)s
 ```
+
+Other minor problems included misunderstanding of the used programming language, e.g. Python default parameters are evaluated once and not on each function call:
+Given a function `def foo(when = datetime.now())`, the default value for `when` is calculated once when first calling the function and each subsequent call invocation `foo` will get the earlier value of `when`.
 
 ## References
 
