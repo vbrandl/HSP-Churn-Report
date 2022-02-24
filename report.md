@@ -2,6 +2,8 @@
 
 ## Problem: Churn
 
+The problem is to accurately measure and aggregate the online times of Peers in P2P Botnets. Monitoring and observing the patterns of those online times helps to better categorize the affected devices. In light of the ever increasing amount of IoT devices and there rather poor security, those get targeted often. But also end user systems and servers can be afflicted. The observation of their corresponding online times can ease the classification of infected devices which in and of itself is an intriguing metric.
+
 ## Existing System: BMS
 
 The Botnet Monitoring System (BMS) is a platform to crawl and monitor P2P botnets and building statistics over time [^bms].
