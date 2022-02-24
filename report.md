@@ -31,13 +31,17 @@ For IP based sessions, the name of the autonomous system (AS) was recorded as we
 ### Max Count Aggregation
 
 Using the max-count aggregation [^maxcount], we also calculated the maximum number of active sessions per AS or country per day.
-This helps to see in which parts of the world a specific botnet is mostly active.
+This helps to see in which parts of the world a specific botnet is mostly active and also if a botnet is growing, shrinking or staying roughly the same size.
+
+For max-count, the start of each session is treated as `+ 1` and the end of a session as `- 1`.
+These events are sorted and iterated over and applied to a counter.
+The maximum value represents the max-count and is persisted.
 
 ### Problems
 
-Most problems we encountered, were performance problems. The solution was correct on small test datasets but did not perform well or at all on realworld data.
+Most problems we encountered, were performance problems. The solution was correct on small test datasets but did not perform well or at all on real world data.
 
-Finding sessions by querying timeframes manually and selecting distinct `IP + Port` combinations in those buckets resulted in slow runtime since a roundtrip to the database was needed for each frame.
+Finding sessions by querying time frames manually and selecting distinct `IP + Port` combinations in those buckets resulted in slow runtime since a round trip to the database was needed for each frame.
 
 ```
 SELECT bot_id, ip, port, botnet_id
@@ -46,7 +50,7 @@ WHERE time_seen BETWEEN %(start)s AND %(start)s + %(frame)s
 ```
 
 With this query, a loop was needed to query each frame.
-The PostgreSQL extension `Timescale` offers a function `time_bucket` [^time_bucket] to perform an equivalent operation on the database, which allows to query many time frames at once and gets rid of the rountdtrips.
+The PostgreSQL extension `Timescale` offers a function `time_bucket` [^time_bucket] to perform an equivalent operation on the database, which allows to query many time frames at once and gets rid of the round trips.
 
 ```
 SELECT time_bucket(%(bucket_size)s, time_seen), bot_id, ip, port, botnet_id
