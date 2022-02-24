@@ -37,13 +37,38 @@ For max-count, the start of each session is treated as `+ 1` and the end of a se
 These events are sorted and iterated over and applied to a counter.
 The maximum value represents the max-count and is persisted.
 
+```python
+events = {}
+for ses in sessions:
+    start_key = ses.start.timestamp()
+    end_key = ses.end.timestamp()
+    events[start_key] = events.get(start_key, 0) + 1
+    events[end_key] = events.get(end_key, 0) - 1
+
+pop = 0
+max_pop = 0
+start_ts = start.timestamp()
+end_ts = end.timestamp()
+for key in sorted(events.keys()):
+    val = events[key]
+    if start_ts < key < end_ts:
+        max_pop = max(max_pop, pop, pop + val)
+    pop += val
+
+return max_pop
+```
+
+While mostly trivial in the implementation, this metric is interesting because it shows the impact of a botnet and might give clues about the operators.
+There's a good chance that the country in which a botnet is mostly active is also the country where it originates.
+On the other hand an even distribution of peers between countries could hint at an organized, international team running the botnet.
+
 ### Problems
 
 Most problems we encountered, were performance problems. The solution was correct on small test datasets but did not perform well or at all on real world data.
 
 Finding sessions by querying time frames manually and selecting distinct `IP + Port` combinations in those buckets resulted in slow runtime since a round trip to the database was needed for each frame.
 
-```
+```sql
 SELECT bot_id, ip, port, botnet_id
 FROM bot_edges
 WHERE time_seen BETWEEN %(start)s AND %(start)s + %(frame)s
@@ -52,7 +77,7 @@ WHERE time_seen BETWEEN %(start)s AND %(start)s + %(frame)s
 With this query, a loop was needed to query each frame.
 The PostgreSQL extension `Timescale` offers a function `time_bucket` [^time_bucket] to perform an equivalent operation on the database, which allows to query many time frames at once and gets rid of the round trips.
 
-```
+```sql
 SELECT time_bucket(%(bucket_size)s, time_seen), bot_id, ip, port, botnet_id
 FROM bot_edges
 WHERE br.time_seen >= %(start)s
