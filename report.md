@@ -2,7 +2,7 @@
 
 ## Problem: Churn
 
-The problem is to accurately measure and aggregate the online times of Peers in P2P Botnets. Monitoring and observing the patterns of those online times helps to better categorize the affected devices. In light of the ever increasing amount of IoT devices and there rather poor security, those get targeted often. But also end user systems and servers can be afflicted. The observation of their corresponding online times can ease the classification of infected devices which in and of itself is an intriguing metric.
+We call churn the dynamic peer participation or the the independant arrival and departure of peers [^churn]. Peer participation is highly dynamic. Therefore churn remains poorly understood. It is difficult to accurately measure and aggregate the online times of peers in P2P botnets. Monitoring and observing the patterns of those online times helps to better categorize the affected devices. In light of the ever increasing amount of IoT devices and there rather poor security, those get targeted often. But also end user systems and servers can be afflicted. The observation of their corresponding online times can ease the classification of infected devices which in and of itself is an intriguing metric. 
 
 ## Existing System: BMS
 
@@ -106,3 +106,4 @@ Therefore, when starting the task, it must first load all still open sessions fr
 [^sality]: [Sality: Story of a Peer-to-Peer Viral Network](https://web.archive.org/web/20120403180815/http://www.symantec.com/content/en/us/enterprise/media/security_response/whitepapers/sality_peer_to_peer_viral_network.pdf) (Falliere, Nicolas)
 [^time_bucket]: [Timescale `time_bucket()`](https://docs.timescale.com/api/latest/hyperfunctions/time_bucket/)
 [^maxcount]: [Max-Count Aggregation Estimation for Moving Points](https://ieeexplore.ieee.org/abstract/document/1314426) (Chen, Yi and Revesz, Peter)
+[^churn]: [Understanding churn in peer-to-peer networks](https://dl.acm.org/doi/abs/10.1145/1177080.1177105) (Daniel, Stutzbach and Reza, Rejaie)
