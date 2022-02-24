@@ -26,10 +26,17 @@ Finding sessions by querying timeframes manually and selecting distinct `IP + Po
 ```
 SELECT *
 FROM bot_edges
-WHERE time_seen BETWEEN $start AND $start + $frame
+WHERE time_seen BETWEEN %(start)s AND %(start)s + %(frame)s
 ```
 
+With this query, a loop was needed to query each frame.
 The PostgreSQL extension `Timescale` offers a function `time_bucket` [^time_bucket] to perform an equivalent operation on the database, which allows to query many time frames at once and gets rid of the rountdtrips.
+
+```
+SELECT time_bucket(%(bucket_size)s, br.time_seen), bot_id, ip, port, botnet_id
+FROM bot_edges
+WHERE br.time_seen >= %(start)s
+```
 
 ## References
 
