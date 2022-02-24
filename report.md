@@ -26,6 +26,11 @@ Major differences in those sessions would be an indicator for either more than o
 
 For IP based sessions, the name of the autonomous system (AS) was recorded as well so it is possible to correlate geographic location to specific churn behaviour, which showed impacts of the Chinese Great Firewall, where peers using Chinese IP addresses would have problems connecting at certain times of the day, which results in many small sessions instead of one long session.
 
+### Max Count Aggregation
+
+Using the max-count aggregation [^maxcount], we also calculated the maximum number of active sessions per AS or country per day.
+This helps to see in which parts of the world a specific botnet is mostly active.
+
 ### Problems
 
 Most problems we encountered, were performance problems. The solution was correct on small test datasets but did not perform well or at all on realworld data.
@@ -60,3 +65,4 @@ Given a function `def foo(when = datetime.now())`, the default value for `when` 
 [^mozi]: [Mozi, Another Botnet Using DHT](https://blog.netlab.360.com/mozi-another-botnet-using-dht/) (Turing, Alex and Wang, Hui)
 [^sality]: [Sality: Story of a Peer-to-Peer Viral Network](https://web.archive.org/web/20120403180815/http://www.symantec.com/content/en/us/enterprise/media/security_response/whitepapers/sality_peer_to_peer_viral_network.pdf) (Falliere, Nicolas)
 [^time_bucket]: [Timescale `time_bucket()`](https://docs.timescale.com/api/latest/hyperfunctions/time_bucket/)
+[^maxcount]: [Max-Count Aggregation Estimation for Moving Points](https://ieeexplore.ieee.org/abstract/document/1314426) (Chen, Yi and Revesz, Peter)
