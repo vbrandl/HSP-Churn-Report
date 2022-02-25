@@ -88,6 +88,12 @@ Given a function `def foo(when = datetime.now())`, the default value for `when` 
 
 Also assuming that a List of tuples with start and end times for sessions was already sorted lead to a minor hiccup. This lead to wrong parameters being given for calculation and resulted in sessions with a negativ duration and many small sessions since consecutive time buckets would not be merged into the same session.
 
+First iterations of the tables and session representation overloaded the semantic of the session `end_time`.
+If it was not set (e.g. `NULL` in SQL or `None` in Python), the session was considered open, else it was considered closed.
+This caused multiple problems, e.g. when trying to extend a session, only the `start_time` was set and checks, if a new bucket is part the same session would fail depending on how the objects were constructed.
+This was solved by introducing another column and field to track the open/closed status.
+This change also makes analysis of the data easier, since we now have the correct session duration even for open sessions.
+
 
 #### Unfinished Sessions
 
