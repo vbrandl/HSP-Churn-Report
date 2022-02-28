@@ -2,7 +2,7 @@
 
 ## Problem: Churn
 
-We call churn the dynamic peer participation or the the independent arrival and departure of peers [^churn]. Peer participation is highly dynamic. Therefore churn remains poorly understood. It is difficult to accurately measure and aggregate the online times of peers in P2P botnets. Monitoring and observing the patterns of those online times helps to better categorize the affected devices. In light of the ever increasing amount of IoT devices and there rather poor security, those get targeted often. But also end user systems and servers can be afflicted. The observation of their corresponding online times can ease the classification of infected devices which in and of itself is an intriguing metric. 
+We call churn the dynamic peer participation or the the independent arrival and departure of peers [^churn]. Peer participation is highly dynamic. Therefore churn remains poorly understood. It is difficult to accurately measure and aggregate the online times of peers in P2P botnets. Monitoring and observing the patterns of those online times helps to better categorize the affected devices. In light of the ever increasing amount of IoT devices and there rather poor security, those get targeted often. But also end user systems and servers can be afflicted. The observation of their corresponding online times can ease the classification of infected devices which in and of itself is an intriguing metric.
 
 ## Existing System: BMS
 
@@ -27,6 +27,9 @@ We recorded sessions both based on IP address + port and the unique bot ID, the 
 Major differences in those sessions would be an indicator for either more than one peer using the same IP (e.g. devices behind a NAT) or really long running nodes using a residential internet connection that rotates IP addresses periodically.
 
 For IP based sessions, the name of the autonomous system (AS) was recorded as well so it is possible to correlate geographic location to specific churn behaviour.
+
+![Alt text](new_churn_diagram.svg)
+*Processing steps for creation of sessions*
 
 ### Max Count Aggregation
 
@@ -93,7 +96,6 @@ If it was not set (e.g. `NULL` in SQL or `None` in Python), the session was cons
 This caused multiple problems, e.g. when trying to extend a session, only the `start_time` was set and checks, if a new bucket is part the same session would fail depending on how the objects were constructed.
 This was solved by introducing another column and field to track the open/closed status.
 This change also makes analysis of the data easier, since we now have the correct session duration even for open sessions.
-
 
 #### Unfinished Sessions
 
