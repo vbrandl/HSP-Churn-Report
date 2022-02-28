@@ -2,7 +2,7 @@
 
 ## Problem: Churn
 
-We call churn the dynamic peer participation or the the independant arrival and departure of peers [^churn]. Peer participation is highly dynamic. Therefore churn remains poorly understood. It is difficult to accurately measure and aggregate the online times of peers in P2P botnets. Monitoring and observing the patterns of those online times helps to better categorize the affected devices. In light of the ever increasing amount of IoT devices and there rather poor security, those get targeted often. But also end user systems and servers can be afflicted. The observation of their corresponding online times can ease the classification of infected devices which in and of itself is an intriguing metric. 
+We call churn the dynamic peer participation or the the independent arrival and departure of peers [^churn]. Peer participation is highly dynamic. Therefore churn remains poorly understood. It is difficult to accurately measure and aggregate the online times of peers in P2P botnets. Monitoring and observing the patterns of those online times helps to better categorize the affected devices. In light of the ever increasing amount of IoT devices and there rather poor security, those get targeted often. But also end user systems and servers can be afflicted. The observation of their corresponding online times can ease the classification of infected devices which in and of itself is an intriguing metric. 
 
 ## Existing System: BMS
 
@@ -15,7 +15,7 @@ Currently the following botnets are being observed:
 * Mozi: IoT, DDoS, data exfiltration [^mozi]
 * Sality: Windows, file infector, spam, proxy, data exfiltration, DDoS [^sality]
 
-A requirement of the task was to integrate the implemented solution into BMS, allowing to build a network graph on which analysis can be performed.
+A requirement of the task was to integrate the implemented solution into BMS, allowing to mesh properly with the already existing database. Futhermore additional grafana dashboards were required to display the newly aggregated metrics.
 
 ## Implementation
 
@@ -26,7 +26,7 @@ A session is defined as a consecutive series of 5 minute time buckets in which a
 We recorded sessions both based on IP address + port and the unique bot ID, the peer uses inside the network.
 Major differences in those sessions would be an indicator for either more than one peer using the same IP (e.g. devices behind a NAT) or really long running nodes using a residential internet connection that rotates IP addresses periodically.
 
-For IP based sessions, the name of the autonomous system (AS) was recorded as well so it is possible to correlate geographic location to specific churn behaviour, which showed impacts of the Chinese Great Firewall, where peers using Chinese IP addresses would have problems connecting at certain times of the day, which results in many small sessions instead of one long session.
+For IP based sessions, the name of the autonomous system (AS) was recorded as well so it is possible to correlate geographic location to specific churn behaviour.
 
 ### Max Count Aggregation
 
@@ -86,7 +86,7 @@ WHERE br.time_seen >= %(start)s
 Other minor problems included misunderstanding of the used programming language, e.g. Python default parameters are evaluated once and not on each function call:
 Given a function `def foo(when = datetime.now())`, the default value for `when` is calculated once when first calling the function and each subsequent call invocation `foo` will get the earlier value of `when`.
 
-Also assuming that a List of tuples with start and end times for sessions was already sorted lead to a minor hiccup. This lead to wrong parameters being given for calculation and resulted in sessions with a negativ duration and many small sessions since consecutive time buckets would not be merged into the same session.
+Also assuming that a List of tuples with start and end times for sessions was already sorted lead to a minor hiccup. This lead to wrong parameters being given for calculation and resulted in sessions with a negative duration and many small sessions since consecutive time buckets would not be merged into the same session.
 
 First iterations of the tables and session representation overloaded the semantic of the session `end_time`.
 If it was not set (e.g. `NULL` in SQL or `None` in Python), the session was considered open, else it was considered closed.
@@ -100,6 +100,10 @@ This change also makes analysis of the data easier, since we now have the correc
 Since currently active sessions can be considered working state of the application, problems could occur, if the scheduler is stopped and started again later.
 It could happen, that earlier active sessions are not closed properly or merged with the current session, if a peer is still active.
 Therefore, when starting the task, it must first load all still open sessions from the database, and perform analysis the churn on those to decide if the session has ended in the meantime or if it is still active and has to be merged with the currently active session.
+
+## Lessons learned
+
+The analysis of the churn behaviour and their corresponding geo location, showed the impacts of the Chinese Great Firewall, where peers using Chinese IP addresses would have problems connecting at certain times of the day, which results in many small sessions instead of one long session.
 
 ## References
 
