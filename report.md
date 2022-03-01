@@ -28,8 +28,14 @@ Major differences in those sessions would be an indicator for either more than o
 
 For IP based sessions, the name of the autonomous system (AS) was recorded as well so it is possible to correlate geographic location to specific churn behaviour.
 
-![Alt text](new_churn_diagram.svg)
+### Data Aggregation
+
+The picture below shows the steps taken for building the entries for the online times table of bots. On start up all sessions that are flagged as open are queried, transformed into python objects and stored in memory. This happens for both the IP + port and the unique bot ID respectively. Assuming the system had a cold start or the containing docker container needed to be restarted, it helps to decrease load because already finished sessions can be ignored.
+
+![Alt text](process_churn.svg)
 *Processing steps for creation of sessions*
+
+For the scheduler we defined a cycle of 5 minutes which corresponds to the size of our time buckets and the defined time window frame. During the scheduled tasks the session with the most recent start (if the session is still open) or end time is queried to determine a starting point. Following that all bot replies beginning from this timestamp that are registered in the database are selected and transformed into session objects.
 
 ### Max Count Aggregation
 
