@@ -1,5 +1,10 @@
 # Measuring Churn in P2P Botnets
 
+P2P botnets, in contrast to regular, centralized botnets, do not require a command and control server, that poses a single point of failure when trying to shut the network down.
+This greatly complicates take-down attempts, but on the other hand, the open design of the network where anybody can join and participate by receiving traffic, allows for some interesting monitoring concepts.
+In this project, we aim to measure the churn of P2P botnets in an existing monitoring system.
+
+
 ## Problem: Churn
 
 We call churn the dynamic peer participation or the the independent arrival and departure of peers [^churn]. Peer participation is highly dynamic. Therefore churn remains poorly understood. It is difficult to accurately measure and aggregate the online times of peers in P2P botnets. Monitoring and observing the patterns of those online times helps to better categorize the affected devices. In light of the ever increasing amount of IoT devices and there rather poor security, those get targeted often. But also end user systems and servers can be afflicted. The observation of their corresponding online times can ease the classification of infected devices which in and of itself is an intriguing metric.
@@ -32,10 +37,13 @@ For IP based sessions, the name of the autonomous system (AS) was recorded as we
 
 The picture below shows the steps taken for building the entries for the online times table of bots. On start up all sessions that are flagged as open are queried, transformed into python objects and stored in memory. This happens for both the IP + port and the unique bot ID respectively. Assuming the system had a cold start or the containing docker container needed to be restarted, it helps to decrease load because already finished sessions can be ignored.
 
-![Alt text](process_churn.svg)
+![Processing steps for creation of sessions](process_churn.svg)
 *Processing steps for creation of sessions*
 
 For the scheduler we defined a cycle of 5 minutes which corresponds to the size of our time buckets and the defined time window frame. During the scheduled tasks the session with the most recent start (if the session is still open) or end time is queried to determine a starting point. Following that all bot replies beginning from this timestamp that are registered in the database are selected and transformed into session objects.
+
+For IP sessions, there is another final step after closing a session, that will load all Bot IDs, the IP address was seen using while the session was active.
+While in most cases, this would be one ID per session, for botnets that target end user devices like mobile phones and computers behind NATs, might have multiple IDs per IP address.
 
 ### Max Count Aggregation
 
@@ -87,8 +95,8 @@ FROM bot_edges
 WHERE time_seen BETWEEN %(start)s AND %(start)s + %(frame)s
 ```
 
-With this query, a loop was needed to query each frame.
-The PostgreSQL extension `Timescale` offers a function `time_bucket` [^time_bucket] to perform an equivalent operation on the database, which allows to query many time frames at once and gets rid of the round trips.
+With this query, a loop was needed to query each frame separately.
+The PostgreSQL extension `Timescale` offers a function `time_bucket` [^time_bucket] to perform an equivalent operation on the database, which allows to query many time frames at once and reduces the round trips from `duration / bucket_size` to one.
 
 ```sql
 SELECT time_bucket(%(bucket_size)s, time_seen), bot_id, ip, port, botnet_id
@@ -115,7 +123,7 @@ Therefore, when starting the task, it must first load all still open sessions fr
 
 ## Lessons learned
 
-The analysis of the churn behaviour and their corresponding geo location, showed the impacts of the Chinese Great Firewall, where peers using Chinese IP addresses would have problems connecting at certain times of the day, which results in many small sessions instead of one long session.
+The analysis of the churn behaviour and their corresponding geolocation, showed the impacts of the Chinese Great Firewall, where peers using Chinese IP addresses would have problems connecting at certain times of the day, which results in many small sessions instead of one long session.
 
 ## References
 
