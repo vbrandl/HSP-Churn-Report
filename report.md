@@ -21,7 +21,7 @@ A requirement of the task was to integrate the implemented solution into BMS, al
 
 The solution was implemented as a scheduler in Python, running in a Docker container, that would periodically query replies we received from bots and would calculate the online sessions for each bot.
 
-A session is defined as a consecutive series of 5 minute time buckets in which a peer is confirmed to be online. If a peer hasn't responded for more than 15 minutes, the session is considered closed and a new session starts, if the peer is seen again.
+A session is defined as a consecutive series of 5 minute time buckets in which a peer is confirmed to be online. If a peer hasn't responded for more than 15 minutes, the session is considered closed and a new session starts, if the peer is seen again. Since a time period is selected during the evaluation, sessions without start time and end times do exists. Sessions without start times are defined as active until the end time and sessions without end times are also still active. 
 
 We recorded sessions both based on IP address + port and the unique bot ID, the peer uses inside the network.
 Major differences in those sessions would be an indicator for either more than one peer using the same IP (e.g. devices behind a NAT) or really long running nodes using a residential internet connection that rotates IP addresses periodically.
@@ -65,7 +65,11 @@ While mostly trivial in the implementation, this metric is interesting because i
 There's a good chance that the country in which a botnet is mostly active is also the country where it originates.
 On the other hand an even distribution of peers between countries could hint at an organized, international team running the botnet.
 
-### Problems
+## Dashboards
+
+For the evaluation we created some dashboards to to graphically illustrate the results. 
+
+## Problems
 
 Most problems we encountered, were performance problems. The solution was correct on small test datasets but did not perform well or at all on real world data.
 
@@ -97,7 +101,7 @@ This caused multiple problems, e.g. when trying to extend a session, only the `s
 This was solved by introducing another column and field to track the open/closed status.
 This change also makes analysis of the data easier, since we now have the correct session duration even for open sessions.
 
-#### Unfinished Sessions
+### Unfinished Sessions
 
 Since currently active sessions can be considered working state of the application, problems could occur, if the scheduler is stopped and started again later.
 It could happen, that earlier active sessions are not closed properly or merged with the current session, if a peer is still active.
