@@ -93,9 +93,13 @@ The following dashboard shows for example the average duration of all sessions o
 
 ![Average duration](average_duration.png)
 
+    (brv45530, ngd31951)
+
 This dashboard shows the change of the bots over time. To get the number of active bots in a selected time period IP addresses were counted:
 
 ![Number of active bots over time](countIPaddress.png)
+
+    (amm30298)
 
 The graphs in the screenshots might not represent the real-world.
 While we used actual data from the Sality botnet, it was only over the duration of one week and might be missing information for longer running sessions.
