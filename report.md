@@ -83,17 +83,14 @@ On the other hand an even distribution of peers between countries could hint at 
 
 For the evaluation we created some dashboards to graphically illustrate the results. The following dashboard shows for example the average duration of all sessions of the different botnets in a time period. The time period can be set arbitrary but the datasets must be in the database to see reasonable results.
 
-*Hier bild vom Dashboard einfügen - average duration*
+![Average duration](average_duration.png)
 
 This dashboard shows the change of the bots over time. To get the number of active bots in a selected time period IP addresses were counted:
 
-*Hier Bild einfügen - count IP addresses over time*
+![Number of active bots over time](countIPaddress.png)
 
-*Haben wir folgendes gemacht? Wenn ja brauche noch bilder:*
 The entire duration of a botnet in a time period.
 
-*das war das wie mit den android versionen, erwähnen oder nicht?:*
-Dashboard shows how many IP addresses of a botnet are active today and how many were active 1/2/3/.../12 weeks ago.
 
 ## Problems
 
