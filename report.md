@@ -81,7 +81,9 @@ On the other hand an even distribution of peers between countries could hint at 
 
 ## Dashboards
 
-For the evaluation we created some dashboards to graphically illustrate the results. The following dashboard shows for example the average duration of all sessions of the different botnets in a time period. The time period can be set arbitrary but the datasets must be in the database to see reasonable results.
+For the evaluation we created some dashboards to graphically illustrate the results.
+Since BMS already comes with a Grafana instance, we could use that to create the dashboards.
+The following dashboard shows for example the average duration of all sessions of the different botnets in a time period. The time period can be set arbitrary but the datasets must be in the database to see reasonable results.
 
 ![Average duration](average_duration.png)
 
@@ -89,7 +91,8 @@ This dashboard shows the change of the bots over time. To get the number of acti
 
 ![Number of active bots over time](countIPaddress.png)
 
-The entire duration of a botnet in a time period.
+The graphs in the screenshots might not represent the real-world.
+While we used actual data from the Sality botnet, it was only over the duration of one week and might be missing information for longer running sessions.
 
 
 ## Problems
