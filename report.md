@@ -1,5 +1,10 @@
 # Measuring Churn in P2P Botnets
 
+P2P botnets, in contrast to regular, centralized botnets, do not require a command and control server, that poses a single point of failure when trying to shut the network down.
+This greatly complicates take-down attempts, but on the other hand, the open design of the network where anybody can join and participate by receiving traffic, allows for some interesting monitoring concepts.
+In this project, we aim to measure the churn of P2P botnets in an existing monitoring system.
+
+
 ## Problem: Churn
 
 We call churn the dynamic peer participation or the the independent arrival and departure of peers [^churn]. Peer participation is highly dynamic. Therefore churn remains poorly understood. It is difficult to accurately measure and aggregate the online times of peers in P2P botnets. Monitoring and observing the patterns of those online times helps to better categorize the affected devices. In light of the ever increasing amount of IoT devices and there rather poor security, those get targeted often. But also end user systems and servers can be afflicted. The observation of their corresponding online times can ease the classification of infected devices which in and of itself is an intriguing metric.
@@ -86,8 +91,8 @@ FROM bot_edges
 WHERE time_seen BETWEEN %(start)s AND %(start)s + %(frame)s
 ```
 
-With this query, a loop was needed to query each frame.
-The PostgreSQL extension `Timescale` offers a function `time_bucket` [^time_bucket] to perform an equivalent operation on the database, which allows to query many time frames at once and gets rid of the round trips.
+With this query, a loop was needed to query each frame separately.
+The PostgreSQL extension `Timescale` offers a function `time_bucket` [^time_bucket] to perform an equivalent operation on the database, which allows to query many time frames at once and reduces the round trips from `duration / bucket_size` to one.
 
 ```sql
 SELECT time_bucket(%(bucket_size)s, time_seen), bot_id, ip, port, botnet_id
@@ -114,7 +119,7 @@ Therefore, when starting the task, it must first load all still open sessions fr
 
 ## Lessons learned
 
-The analysis of the churn behaviour and their corresponding geo location, showed the impacts of the Chinese Great Firewall, where peers using Chinese IP addresses would have problems connecting at certain times of the day, which results in many small sessions instead of one long session.
+The analysis of the churn behaviour and their corresponding geolocation, showed the impacts of the Chinese Great Firewall, where peers using Chinese IP addresses would have problems connecting at certain times of the day, which results in many small sessions instead of one long session.
 
 ## References
 
