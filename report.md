@@ -40,7 +40,7 @@ The picture below shows the steps taken for building the entries for the online 
 ![Processing steps for creation of sessions](process_churn.svg)
 *Processing steps for creation of sessions*
 
-For the scheduler we defined a cycle of 5 minutes which corresponds to the size of our time buckets and the defined time window frame. During the scheduled tasks the session with the most recent start (if the session is still open) or end time is queried to determine a starting point. Following that all bot replies beginning from this timestamp that are registered in the database are selected and transformed into session objects.
+For the scheduler we defined a cycle of 5 minutes which corresponds to the size of our time buckets and the defined time window frame. During the scheduled tasks the session with the most recent start (if the session is still open) or end time is queried to determine a starting point. Following that all bot replies beginning from this timestamp that are registered in the database are selected and transformed into session objects. As mentioned before open sessions with no replies after a time frame of 15 minutes are set to closed. All those sessions are then inserted into the data base. Here we use the UPSERT feature of postgres to either update existing sessions or insert new ones.
 
 For IP sessions, there is another final step after closing a session, that will load all Bot IDs, the IP address was seen using while the session was active.
 While in most cases, this would be one ID per session, for botnets that target end user devices like mobile phones and computers behind NATs, might have multiple IDs per IP address.
