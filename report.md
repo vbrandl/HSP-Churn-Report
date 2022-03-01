@@ -89,11 +89,8 @@ This dashboard shows the change of the bots over time. To get the number of acti
 
 ![Number of active bots over time](countIPaddress.png)
 
-*Haben wir folgendes gemacht? Wenn ja brauche noch bilder:*
 The entire duration of a botnet in a time period.
 
-*das war das wie mit den android versionen, erwähnen oder nicht?:*
-Dashboard shows how many IP addresses of a botnet are active today and how many were active 1/2/3/.../12 weeks ago.
 
 ## Problems
 
