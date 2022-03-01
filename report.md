@@ -151,7 +151,7 @@ Therefore, when starting the task, it must first load all still open sessions fr
 
     (amm30298, brv45530, ngd31951)
 
-## Lessons learned
+## Findings
 
 The analysis of the churn behaviour and their corresponding geolocation, showed the impacts of the Chinese Great Firewall, where peers using Chinese IP addresses would have problems connecting at certain times of the day, which results in many small sessions instead of one long session.
 
