@@ -26,7 +26,7 @@ A requirement of the task was to integrate the implemented solution into BMS, al
 
 The solution was implemented as a scheduler in Python, running in a Docker container, that would periodically query replies we received from bots and would calculate the online sessions for each bot.
 
-A session is defined as a consecutive series of 5 minute time buckets in which a peer is confirmed to be online. If a peer hasn't responded for more than 15 minutes, the session is considered closed and a new session starts, if the peer is seen again. Since a time period is selected during the evaluation, sessions without start time and end times do exists. Sessions without start times are defined as active until the end time and sessions without end times are also still active. 
+A session is defined as a consecutive series of 5 minute time buckets in which a peer is confirmed to be online. If a peer hasn't responded for more than 15 minutes, the session is considered closed and a new session starts, if the peer is seen again. Since a time period is selected during the evaluation, sessions without start time and end times do exists. Sessions without start times are defined as active until the end time and sessions without end times are still active. 
 
 We recorded sessions both based on IP address + port and the unique bot ID, the peer uses inside the network.
 Major differences in those sessions would be an indicator for either more than one peer using the same IP (e.g. devices behind a NAT) or really long running nodes using a residential internet connection that rotates IP addresses periodically.
@@ -81,7 +81,19 @@ On the other hand an even distribution of peers between countries could hint at 
 
 ## Dashboards
 
-For the evaluation we created some dashboards to to graphically illustrate the results. 
+For the evaluation we created some dashboards to graphically illustrate the results. The following dashboard shows for example the average duration of all sessions of the different botnets in a time period. The time period can be set arbitrary but the datasets must be in the database to see reasonable results.
+
+*Hier bild vom Dashboard einfügen - average duration*
+
+This dashboard shows the change of the bots over time. To get the number of active bots in a selected time period IP addresses were counted:
+
+*Hier Bild einfügen - count IP addresses over time*
+
+*Haben wir folgendes gemacht? Wenn ja brauche noch bilder:*
+The entire duration of a botnet in a time period.
+
+*das war das wie mit den android versionen, erwähnen oder nicht?:*
+Dashboard shows how many IP addresses of a botnet are active today and how many were active 1/2/3/.../12 weeks ago.
 
 ## Problems
 
