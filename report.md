@@ -33,6 +33,8 @@ Major differences in those sessions would be an indicator for either more than o
 
 For IP based sessions, the name of the autonomous system (AS) was recorded as well so it is possible to correlate geographic location to specific churn behaviour.
 
+    (amm30298, brv45530, ngd31951)
+
 ### Data Aggregation
 
 The picture below shows the steps taken for building the entries for the online times table of bots. On start up all sessions that are flagged as open are queried, transformed into python objects and stored in memory. This happens for both the IP + port and the unique bot ID respectively. Assuming the system had a cold start or the containing docker container needed to be restarted, it helps to decrease load because already finished sessions can be ignored.
@@ -44,6 +46,8 @@ For the scheduler we defined a cycle of 5 minutes which corresponds to the size 
 
 For IP sessions, there is another final step after closing a session, that will load all Bot IDs, the IP address was seen using while the session was active.
 While in most cases, this would be one ID per session, for botnets that target end user devices like mobile phones and computers behind NATs, might have multiple IDs per IP address.
+
+    (amm30298, brv45530)
 
 ### Max Count Aggregation
 
@@ -78,6 +82,8 @@ return max_pop
 While mostly trivial in the implementation, this metric is interesting because it shows the impact of a botnet and might give clues about the operators.
 There's a good chance that the country in which a botnet is mostly active is also the country where it originates.
 On the other hand an even distribution of peers between countries could hint at an organized, international team running the botnet.
+
+    (ngd31951)
 
 ## Dashboards
 
@@ -116,10 +122,14 @@ FROM bot_edges
 WHERE br.time_seen >= %(start)s
 ```
 
+    (brv45530)
+
 Other minor problems included misunderstanding of the used programming language, e.g. Python default parameters are evaluated once and not on each function call:
 Given a function `def foo(when = datetime.now())`, the default value for `when` is calculated once when first calling the function and each subsequent call invocation `foo` will get the earlier value of `when`.
 
 Also assuming that a List of tuples with start and end times for sessions was already sorted lead to a minor hiccup. This lead to wrong parameters being given for calculation and resulted in sessions with a negative duration and many small sessions since consecutive time buckets would not be merged into the same session.
+
+    (ngd31951)
 
 First iterations of the tables and session representation overloaded the semantic of the session `end_time`.
 If it was not set (e.g. `NULL` in SQL or `None` in Python), the session was considered open, else it was considered closed.
@@ -127,11 +137,15 @@ This caused multiple problems, e.g. when trying to extend a session, only the `s
 This was solved by introducing another column and field to track the open/closed status.
 This change also makes analysis of the data easier, since we now have the correct session duration even for open sessions.
 
+    (amm30298)
+
 ### Unfinished Sessions
 
 Since currently active sessions can be considered working state of the application, problems could occur, if the scheduler is stopped and started again later.
 It could happen, that earlier active sessions are not closed properly or merged with the current session, if a peer is still active.
 Therefore, when starting the task, it must first load all still open sessions from the database, and perform analysis the churn on those to decide if the session has ended in the meantime or if it is still active and has to be merged with the currently active session.
+
+    (amm30298, brv45530, ngd31951)
 
 ## Lessons learned
 
